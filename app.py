@@ -11,7 +11,7 @@ def index():
 @app.route('/trips', methods=["GET"])
 def get_all_trips():
     trips = Trip.get_all()
-    return trips
+    return jsonify(trips), 200
 
 @app.route('/trip/<int:trip_id>', methods=['GET'])
 def get_single_trip(trip_id):
