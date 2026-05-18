@@ -12,22 +12,65 @@ class Trip:
     def get_all():
         try:
             connection = get_connection()
-            cursor =  connection.cursor(dictionary = True)
-            cursor.execute("SELECT id, name, city, latitude, longitude FROM trip")
+            cursor = connection.cursor(dictionary = True)
+            cursor.execute("SELECT id, name, city, latitude, longitude FROM trips")
             return cursor.fetchall()
+        except Exception as ex:
+            return str(ex)
+        finally:
+            cursor.close()
+            connection.close()
+
+    def get_one(trip_id: int):
+        try:
+            connection = get_connection()
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute(
+                "SELECT id, name, city, latitude, longitude FROM trip WHERE id = %s",
+                (trip_id,)
+            )
+            return cursor.fetchone()
         except Exception as ex:
             print(ex)
         finally:
             cursor.close()
             connection.close()
+
     def save(self): 
         try:
             connection = get_connection()
             cursor = connection.cursor()
-            sql = 'INSERT INTO trip "INSERT INTO lugares (name, city, latitude, longitude) VALUES (%s, %s, %s, %s)")'
+            sql = 'INSERT INTO trips (name, city, latitude, longitude) VALUES (%s, %s, %s, %s)'
             cursor.execute(sql, (self.name, self.city, self.latitude, self.longitude))
             connection.commit()
             return cursor.lastrowid
+        except Exception as ex:
+            print(ex)
+        finally:
+            cursor.close()
+            connection.close()
+
+    def update(self, trip_id: int):
+        try:
+            connection = get_connection()
+            cursor = connection.cursor()
+            sql = ' UPDATE trip SET name = %s, city = %s, latitude = %s, longitude = %s, WHERE id = %s'
+            cursor.execute(sql, (self.name, self.city, self.latitude, self.longitude, trip_id))
+            connection.commit()
+            return cursor.rowcount
+        except Exception as ex:
+            print(ex)
+        finally:
+            cursor.close()
+            connection.close()
+
+    def delete(trip_id: int):
+        try:
+            connection = get_connection()
+            cursor = connection.cursor()
+            cursor.execute("DELETE FROM trips WHERE id = %s", (trip_id,))
+            connection.commit()
+            return cursor.rowcount
         except Exception as ex:
             print(ex)
         finally:
