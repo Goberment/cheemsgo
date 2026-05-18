@@ -9,13 +9,13 @@ def index():
     return jsonify({"succes": True, "message": "Helo world"}), 200
 
 @app.route('/trips', methods=["GET"])
-def get_all_trips():
+def get_all():
     trips = Trip.get_all()
     return jsonify(trips), 200
 
 @app.route('/trip/<int:trip_id>', methods=['GET'])
-def get_single_trip(trip_id):
-    trip = Trip.get_by_id(trip_id)
+def get_one(trip_id):
+    trip = Trip.get_one(trip_id)
     return jsonify(trip), 200
 
 @app.route('/trip', methods=['POST'])
@@ -47,7 +47,3 @@ def delete_trip(trip_id):
 
 if __name__ == "__main__":
     app.run(host = ('0.0.0.0'), port=5000)
-from flask import Flask, jsonify, request
-from entities.trip import Trip 
-
-
